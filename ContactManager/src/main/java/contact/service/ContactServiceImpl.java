@@ -39,7 +39,6 @@ public class ContactServiceImpl implements ContactService {
 
     @Transactional
     public List<Contact> getContacts() {
-
         List<Contact> contactList = this.contactDAO.getContacts();
         return contactList;
     }
