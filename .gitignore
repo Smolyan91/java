@@ -1,0 +1,6 @@
+# Created by .ignore support plugin (hsz.mobi)
+.idea/
+ContactManager/target/classes/
+ContactManager/target/generated-sources/
+java.iml
+pom.xml
