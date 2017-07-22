@@ -19,6 +19,5 @@ public class JGrep {
             return;
         }
         PATH_TO_FILE = Paths.get(args[2]);
-
     }
 }
