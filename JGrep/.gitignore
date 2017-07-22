@@ -1,3 +1,5 @@
 # Created by .ignore support plugin (hsz.mobi)
 JGrep.iml
 .idea
+out
+out/
