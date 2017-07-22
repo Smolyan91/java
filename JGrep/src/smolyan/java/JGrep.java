@@ -15,6 +15,16 @@ public class JGrep {
         new OperationImpl(initTypeCommand(args)).start();
     }
 
+    /***
+     * grep:  pattern pathToFile
+     * srch(search):  pattern pathToFile
+     * rm/del(remove=del):  pathToFile
+     * mv(move):  fromFile toFile
+     * cp(copy):  originalFile targetFile
+     * crd/crf(create directory (-s)/ create file(-s)): ...newFiles
+     * @param arrayArgs
+     * @return DataArguments
+     */
     private static DataArguments initTypeCommand(String[] arrayArgs){
         Operation operation;
         DataArguments da;
@@ -65,6 +75,12 @@ public class JGrep {
                     operation = Operation.CRF;
                 }else operation = Operation.ERROR;
             } break;
+
+            case "srch" : {
+                if(countArgs == 3){
+                    operation = Operation.SRCH;
+                }else operation = Operation.ERROR;
+            }break;
 
             case "help" : {
                 if (countArgs == 2){

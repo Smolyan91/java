@@ -8,5 +8,6 @@ public enum Operation {
     CRD,
     CRF,
     HELP,
+    SRCH,
     ERROR
 }

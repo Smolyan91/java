@@ -8,4 +8,5 @@ public interface Operation {
     void remove(String pathToFile) throws IOException;
     void move(String locatePathFile, String newPathFile) throws IOException;
     void copy(String originalFile, String targetFile) throws IOException;
+    void search(String pattern, String filePath) throws IOException;
 }
