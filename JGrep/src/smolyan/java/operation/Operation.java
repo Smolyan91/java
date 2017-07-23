@@ -9,4 +9,7 @@ public interface Operation {
     void move(String locatePathFile, String newPathFile) throws IOException;
     void copy(String originalFile, String targetFile) throws IOException;
     void search(String pattern, String filePath) throws IOException;
+    void rename(String newName, String path) throws IOException;
+    void createFile(String fileName, String path) throws IOException;
+    void createDirectory(String dirName, String path) throws IOException;
 }
