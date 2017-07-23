@@ -1,6 +1,7 @@
 package smolyan.java.operation;
 
 import smolyan.java.DataArguments;
+import smolyan.java.RecursiveSearch;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -15,6 +16,7 @@ import java.util.List;
 public class OperationImpl implements Operation{
 
     private DataArguments dataArguments;
+    private List<Path> pathList;
     private List<Path> listMessageSuccess;
     private List<String> listMessageError;
 
@@ -50,33 +52,37 @@ public class OperationImpl implements Operation{
     }
 
     @Override
-    public void move(String locatePathFile, String newPathFile) throws IOException {
-        Path from = Paths.get(locatePathFile).toRealPath();
-        Path to = Paths.get(newPathFile).toRealPath();
+    public void move(String source, String target) throws IOException {
+        Path from = Paths.get(source).toRealPath();
+        Path to = Paths.get(target).toRealPath();
 
     }
 
     @Override
-    public void copy(String originalFile, String targetFile) throws IOException {
-        Path from = Paths.get(originalFile).toRealPath();
+    public void copy(String source, String targetFile) throws IOException {
+        Path from = Paths.get(source).toRealPath();
         Path to = Paths.get(targetFile).toRealPath();
 
     }
 
+    /***
+     * Рекурсивный поиск по дереву каталогов относительно переданного пути path
+     * по заданному шаблону (pattern)
+     * Возвращает коллекцию с найденными файлами
+     * @param pattern
+     * @param filePath
+     * @throws IOException
+     */
     @Override
     public void search(String pattern, String filePath)throws IOException{
         Path path = Paths.get(filePath).toRealPath();
-        try (DirectoryStream<Path>directoryStream = Files.newDirectoryStream(path, "*" + pattern + "*")){
-            if (directoryStream != null){
-                listMessageSuccess = new LinkedList<>();
-                for (Path entry: directoryStream){
-                    listMessageSuccess.add(entry.getFileName());
-                    System.out.println(entry.getFileName());
-                }
-            }
-        }catch (Exception e){
-            listMessageError = new ArrayList<>();
-            listMessageError.add(e.getMessage());
+        RecursiveSearch recursiveSearch = new RecursiveSearch(pattern);
+        Files.walkFileTree(path, recursiveSearch);
+        pathList = recursiveSearch.getPathList();
+        for (Path entry: this.pathList){
+            //TODO вывести в менеджер
+            //TODO обработать AccessDenied Exception  при доступе к файлу
+            System.out.println("Name: " + entry.getFileName() + "\tAbsolute path: " + entry.toRealPath());
         }
     }
 }
