@@ -22,6 +22,7 @@ public class JGrep {
      * mv(move):  fromFile toFile
      * cp(copy):  originalFile targetFile
      * crd/crf(create directory (-s)/ create file(-s)): ...newFiles
+     * rename: newName pathToFile
      * @param arrayArgs
      * @return DataArguments
      */
@@ -37,6 +38,8 @@ public class JGrep {
                     operation = Operation.GREP;
                 }else operation = Operation.ERROR;
             } break;
+
+            case "rename": operation = Operation.RENAME; break;
 
             case "del"  : {
                 if(countArgs == 2){

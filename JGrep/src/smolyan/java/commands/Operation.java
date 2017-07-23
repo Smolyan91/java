@@ -9,5 +9,6 @@ public enum Operation {
     CRF,
     HELP,
     SRCH,
+    RENAME,
     ERROR
 }
