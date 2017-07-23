@@ -3,7 +3,9 @@ package smolyan.java.operation;
 import smolyan.java.DataArguments;
 import smolyan.java.RecursiveSearch;
 
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,6 +14,7 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 
 //TODO реализовать логику работы с флагами
@@ -96,11 +99,52 @@ public class OperationImpl implements Operation{
         }
     }
 
+    public static void printFile(Path path) throws  IOException{
+        Files.lines(path.toRealPath(), StandardCharsets.UTF_8).forEach(System.out::println);
+    }
+
+    //TODO Реализовать флаги
+    /***
+     * Поиск вхождений в файле по заданному паттерну
+     * Находит и заменяет на <*pattern*>. После выхода из режима поиска (q)-
+     * возвращает файл к прежнему виду
+     * @param pattern
+     * @param pathToFile
+     * @param replacePattern
+     * @throws IOException
+     */
     @Override
-    public void grep(String pattern, String pathToFile) throws IOException {
+    public void grep(String pattern, String pathToFile, String ...replacePattern) throws IOException {
         Path path = Paths.get(pathToFile).toRealPath();
-
-
+        Charset charset = StandardCharsets.UTF_8;
+        String boldText = "<*" + pattern + "*>";
+        if (replacePattern.length > 0){
+            Files.write(path,
+                    new String(Files.readAllBytes(path),charset)
+                            .replaceAll(pattern, replacePattern[0])
+                            .getBytes());
+            printFile(path);
+            return;
+        }
+        Files.write(path,
+                new String(Files.readAllBytes(path),charset)
+                        .replaceAll(pattern, boldText)
+                        .getBytes());
+        printFile(path);
+        try(Scanner scanner = new Scanner(System.in)){
+            String exit;
+            do{
+                exit = scanner.next();
+            }while (!exit.equalsIgnoreCase("q"));
+        }
+        Files.write(path,
+                new String(Files.readAllBytes(path),charset)
+                        .replace(boldText, pattern)
+                        .getBytes());
+        //Очистка консоли
+        Runtime runtime = Runtime.getRuntime();
+        Process process = runtime.exec("clear");
+        printFile(path);
     }
 
     @Override
