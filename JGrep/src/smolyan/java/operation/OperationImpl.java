@@ -7,21 +7,26 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
+import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Set;
 
 //TODO реализовать логику работы с флагами
 public class OperationImpl implements Operation{
 
     private DataArguments dataArguments;
     private List<Path> pathList;
+    private static Set<PosixFilePermission> permissions = PosixFilePermissions.fromString("rw-rw-rw-");
+    private static FileAttribute<Set<PosixFilePermission>> attribute = PosixFilePermissions.asFileAttribute(permissions);
 
     public OperationImpl(DataArguments dataArguments) {
         this.dataArguments = dataArguments;
     }
 
-    public void start()
-            throws IOException{
+    public void start() throws IOException{
         if (this.dataArguments != null){
             switch (dataArguments.getCommandDA()){
                 case GREP:
@@ -68,7 +73,7 @@ public class OperationImpl implements Operation{
         int count = 3; //TODO заглушка
         for (int i = 0; i < count; i++) {
             String newFileName = path + "/" + prefixName + i + suffixName;
-            Path path1 = Files.createFile(Paths.get(newFileName));
+            Path path1 = Files.createFile(Paths.get(newFileName),attribute);
             System.out.println(path1.getFileName() + " " + path1.toRealPath());
         }
     }
@@ -86,7 +91,7 @@ public class OperationImpl implements Operation{
         int count = 3;//TODO заглушка на кол-во созданных директорий
         for (int i = 0; i < count; i++) {
             String newDirName = path + "/" + dirName  + i;
-            Path path1 = Files.createDirectory(Paths.get(newDirName));
+            Path path1 = Files.createDirectory(Paths.get(newDirName), attribute);
             System.out.println(path1.getFileName() + " " + path1.toRealPath());
         }
     }
@@ -101,21 +106,34 @@ public class OperationImpl implements Operation{
     @Override
     public void remove(String pathToFile) throws IOException {
         Path path = Paths.get(pathToFile).toRealPath();
-
+        Files.deleteIfExists(path);
     }
 
     @Override
     public void move(String source, String target) throws IOException {
         Path from = Paths.get(source).toRealPath();
         Path to = Paths.get(target).toRealPath();
-
+        Files.move(from, to,
+                StandardCopyOption.ATOMIC_MOVE,
+                StandardCopyOption.COPY_ATTRIBUTES,
+                StandardCopyOption.REPLACE_EXISTING);
     }
 
+    /***
+     * -r : replace - скопирует файл и перезапишет, если такой файл уже существует
+     * @param source
+     * @param targetFile
+     * @throws IOException
+     */
     @Override
     public void copy(String source, String targetFile) throws IOException {
         Path from = Paths.get(source).toRealPath();
         Path to = Paths.get(targetFile).toRealPath();
-
+        //TODO реализовать с флагами
+        Files.copy(from, to,
+                StandardCopyOption.ATOMIC_MOVE,
+                StandardCopyOption.COPY_ATTRIBUTES,
+                StandardCopyOption.REPLACE_EXISTING);
     }
 
     /***
