@@ -10,5 +10,7 @@ public enum Operation {
     HELP,
     SRCH,
     RENAME,
-    ERROR
+    ERROR,
+    INFO,
+    SET_PROPS
 }

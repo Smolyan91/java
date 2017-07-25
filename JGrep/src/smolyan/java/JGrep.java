@@ -39,6 +39,12 @@ public class JGrep {
                 }else operation = Operation.ERROR;
             } break;
 
+            case "info": {
+                if (countArgs == 2){
+                    System.out.println("INFO");
+                    operation = Operation.INFO;
+                }else operation = Operation.ERROR;
+            } break;
             case "rename": operation = Operation.RENAME; break;
 
             case "del"  : {
@@ -56,6 +62,12 @@ public class JGrep {
             case "cp"   : {
                 if(countArgs == 3){
                     operation = Operation.CP  ;
+                }else operation = Operation.ERROR;
+            } break;
+
+            case "setprops":{
+                if (countArgs == 3){
+                    operation = Operation.SET_PROPS;
                 }else operation = Operation.ERROR;
             } break;
 
