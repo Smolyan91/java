@@ -21,4 +21,8 @@ public class PrintInfo {
             e.getStackTrace();
         }
     }
+
+    public static void printMessage(String description, String message){
+        System.out.println(description + ": " + message);
+    }
 }

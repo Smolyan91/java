@@ -112,8 +112,9 @@ public class OperationImpl implements Operation{
             }
         }
         Files.setPosixFilePermissions(toRealPath, permissions);
-
-
+        String own = attributes.owner().getName();
+        String perms = PosixFilePermissions.toString(permissions);
+        PrintInfo.printMessage("File attributes", own + "" + perms);
     }
 
     /***
