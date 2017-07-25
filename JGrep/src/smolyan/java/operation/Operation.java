@@ -12,4 +12,6 @@ public interface Operation {
     void rename(String newName, String path) throws IOException;
     void createFile(String fileName, String path) throws IOException;
     void createDirectory(String dirName, String path) throws IOException;
+    void infoFile(String path) throws IOException;
+    void updateProps(String pattern, String path) throws IOException;
 }

@@ -1,6 +1,7 @@
 package smolyan.java.operation;
 
 import smolyan.java.DataArguments;
+import smolyan.java.PrintInfo;
 import smolyan.java.RecursiveSearch;
 
 import java.io.*;
@@ -10,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.PosixFileAttributes;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.nio.file.StandardCopyOption;
@@ -56,9 +58,62 @@ public class OperationImpl implements Operation{
                 case CRD:
                     createDirectory(this.dataArguments.getMassArgs()[0], this.dataArguments.getMassArgs()[1]);
                     break;
+                case INFO:
+                    infoFile(this.dataArguments.getMassArgs()[0]);
+                    break;
+                case SET_PROPS:
+                    updateProps(this.dataArguments.getMassArgs()[1], this.dataArguments.getMassArgs()[0]);
+                    break;
                 default:break;
             }
         }else System.out.println("DataArguments is null!!!");//TODO исследовать
+    }
+
+    @Override
+    public void updateProps(String pattern, String path) throws IOException {
+        Path toRealPath = Paths.get(path).toRealPath();
+        PosixFileAttributes attributes =
+                Files.readAttributes(toRealPath, PosixFileAttributes.class);
+        Set<PosixFilePermission> permissions = attributes.permissions();
+        permissions.clear();
+        String owner = attributes.owner().getName();
+        String perm = PosixFilePermissions.toString(permissions);
+        System.out.format("%s %s%n",owner, perm);
+        permissions.add(PosixFilePermission.OWNER_READ);
+        permissions.add(PosixFilePermission.OWNER_WRITE);
+        permissions.add(PosixFilePermission.OWNER_EXECUTE);
+        if (owner.equalsIgnoreCase("root"))
+            permissions.add(PosixFilePermission.OWNER_EXECUTE);
+        if (pattern.contains("-")){
+            String[] attrMass = pattern.split("-");
+            if (attrMass.length >= 2){
+                char[] user = attrMass[1].toCharArray();
+                for (int i = 0; i < user.length; i++) {
+                    if (user[i] == 'r') permissions.add(PosixFilePermission.OTHERS_READ);
+                    if (user[i] == 'w') permissions.add(PosixFilePermission.OTHERS_WRITE);
+                    if (user[i] == 'x')
+                        if(attributes.owner().toString().equalsIgnoreCase("root")
+                            || toRealPath.toAbsolutePath().toString().contains("/home/igor")){
+                        permissions.add(PosixFilePermission.OTHERS_EXECUTE);
+                    }
+                }
+            }
+            if (attrMass.length == 3){
+                char[] group = attrMass[1].toCharArray();
+                for (int i = 0; i < group.length; i++) {
+                    if (group[i] == 'r') permissions.add(PosixFilePermission.GROUP_READ);
+                    if (group[i] == 'w') permissions.add(PosixFilePermission.GROUP_WRITE);
+                    if (group[i] == 'x')
+                        if (attributes.owner().toString().equalsIgnoreCase("root")
+                            || toRealPath.toAbsolutePath().toString().contains("/home/igor")){
+                        permissions.add(PosixFilePermission.GROUP_EXECUTE);
+                    }
+                }
+            }
+        }
+        Files.setPosixFilePermissions(toRealPath, permissions);
+
+
     }
 
     /***
@@ -97,6 +152,13 @@ public class OperationImpl implements Operation{
             Path path1 = Files.createDirectory(Paths.get(newDirName), attribute);
             System.out.println(path1.getFileName() + " " + path1.toRealPath());
         }
+    }
+
+    @Override
+    public void infoFile(String path) throws IOException {
+        Path pathToFile = Paths.get(path).toRealPath();
+        System.out.println(pathToFile.toRealPath());
+        PrintInfo.printInfoAboutFile(pathToFile);
     }
 
     public static void printFile(Path path) throws  IOException{
