@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
     <!-- Настройка источника данных-->
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
@@ -25,4 +26,10 @@
             </props>
         </property>
     </bean>
+
+    <context:component-scan base-package="splitter.dao"/>
+
+    <!--Добавим механизм постобработки исключений. ПРименяется ко всем классам @Repository
+    для перехвата специфичных исключений и преобразование их в неконтроллируемые в Spring-->
+    <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
 </beans>
