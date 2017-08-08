@@ -27,6 +27,12 @@
         </property>
     </bean>
 
+    <!--Добавим менеджер транзакций для работы с данными. Используем менеджер для работы с Hibernate -->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+
     <context:component-scan base-package="splitter.dao"/>
 
     <!--Добавим механизм постобработки исключений. ПРименяется ко всем классам @Repository
