@@ -12,7 +12,9 @@ import java.util.List;
 /**
  * Created by igor on 08.08.17.
  */
-@Repository
+@Repository //обнаруживается элементом <context: component-scan>
+            //Следовательно, чтобы не объявлять компонент класса в xml, укажем
+            // <context: component-scan base-package='splitter.dao'>
 public class SplitterDaoImpl implements SplitterDAO{
 
     private SessionFactory sessionFactory;
