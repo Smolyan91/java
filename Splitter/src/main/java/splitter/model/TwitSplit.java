@@ -4,8 +4,8 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "Splitle")
-public class Splitle {
+@Table(name = "TwitSplit")
+public class TwitSplit {
 
     @Id
     @GeneratedValue
@@ -47,7 +47,7 @@ public class Splitle {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Splitle splitle = (Splitle) o;
+        TwitSplit splitle = (TwitSplit) o;
 
         if (ID != splitle.ID) return false;
         if (MESSAGE != null ? !MESSAGE.equals(splitle.MESSAGE) : splitle.MESSAGE != null) return false;
@@ -64,7 +64,7 @@ public class Splitle {
 
     @Override
     public String toString() {
-        return "Splitle{" +
+        return "TwitSplit{" +
                 "ID=" + ID +
                 ", MESSAGE='" + MESSAGE + '\'' +
                 ", DATE=" + DATE +
