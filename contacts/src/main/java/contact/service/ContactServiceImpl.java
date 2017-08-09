@@ -3,6 +3,7 @@ package contact.service;
 import contact.dao.ContactDAO;
 import contact.model.Contact;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,10 +15,10 @@ import java.util.List;
 @Service
 public class ContactServiceImpl  implements ContactService{
 
-    @Autowired
+
     private ContactDAO contactDAO;
 
-
+    @Qualifier("contactService")
     public void setContactDAO(ContactDAO contactDAO) {
         this.contactDAO = contactDAO;
     }

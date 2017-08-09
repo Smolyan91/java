@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-/**
- * Created by igor on 15.07.17.
- */
+
 @Controller
 public class ContactController {
 
